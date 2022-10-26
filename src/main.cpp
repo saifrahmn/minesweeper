@@ -1,16 +1,17 @@
 #include <SDL.h>
-#include <stdio.h>
-
+#include<SDL_image.h>
+#include<iostream>
+#include"renderwindow.hpp"
 #define SCREEN_WIDTH 1280 
 #define SCREEN_HEIGHT 720
-
+using namespace std;
 int main(int argc, char** argv){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("SLD test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Window *window = SDL_CreateWindow("Minesweeper", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if(!window){
         printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
         return 1;
@@ -35,8 +36,6 @@ int main(int argc, char** argv){
                     break;
             }
         }
-
-        SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
         SDL_RenderClear(renderer);
 
         SDL_RenderPresent(renderer);
