@@ -1,45 +1,36 @@
-#include <SDL.h>
+#include<SDL.h>
 #include<SDL_image.h>
 #include<iostream>
+
 #include"renderwindow.hpp"
-#define SCREEN_WIDTH 1280 
-#define SCREEN_HEIGHT 720
-using namespace std;
-int main(int argc, char** argv){
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
-        printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
-    }
+#include"Entity.hpp"
 
-    SDL_Window *window = SDL_CreateWindow("Minesweeper", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
-    if(!window){
-        printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
+int main(int argc,char** argv){
+    if(SDL_Init(SDL_INIT_VIDEO)>0){
+        std::cout<<"Hey.. SDL_Init HAS FAILED. SDL_ERROR: "<<SDL_GetError()<<std::endl;
     }
-
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(!renderer){
-        printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
-        return 1;
+    if(!(IMG_Init(IMG_INIT_PNG))){
+        std::cout<<"IMG_init has failed. Errors:"<<SDL_GetError()<<std::endl;
     }
+    renderwindow window("Minesweeper",1280,720);
 
-    bool running = true;
-    while(running){
-        SDL_Event event;
+    SDL_Texture * grid=window.loadTexture("./res/gfs/gif.gif");
+
+    Entity platform(100,100,grid);
+    bool gameRunning = true;
+    SDL_Event event;
+    while(gameRunning){
         while(SDL_PollEvent(&event)){
-            switch(event.type){
-                case SDL_QUIT:
-                    running = false;
-                    break;
-
-                default:
-                    break;
-            }
+            if(event.type==SDL_QUIT)
+                gameRunning= false;
         }
-        SDL_RenderClear(renderer);
 
-        SDL_RenderPresent(renderer);
+        window.clear();
+        window.render(grid);
+        window.display();
+
     }
-
+    window.cleanup();
+    SDL_Quit();
     return 0;
 }
